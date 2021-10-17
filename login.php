@@ -1,3 +1,7 @@
+<?php
+include 'database.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,9 +15,16 @@
     
 </head>
 <body class="bodylogin">
-    
+<?php 
+session_start();
+
+if (isset($_SESSION['useremail'])) {
+
+}
+
+?>
 <section class="login-section">
-        <form method="post">
+        <form method="POST">
             <h2 class="login-title title ">Login page</h2>
             <div class="login-content ">
       
@@ -33,6 +44,60 @@
                     button-giris" name="loginbutton">Login</button>
       
             </div>
+            <?php
+            $password = "";
+            $useremail = "";
+
+        if (isset($_POST["email"])) {
+
+          $useremail = $_POST['email'];
+        }
+
+        if (isset($_POST["password"])) {
+
+          $password =  $_POST['password'];
+        }
+
+
+        if (isset($_POST["loginbutton"])) {
+        
+            $sifrelipassword=md5($password);
+            $_SESSION['useremail']= $useremail;
+            $useremailselect = "select * from users where user_email = '$useremail'";
+            $result0 = mysqli_query($con, $useremailselect);
+            $num0 = mysqli_num_rows($result0);
+            if ($num0 == 1) {
+             
+              $userselect = "select * from users where user_email = '$useremail' and user_password = '$sifrelipassword' and rol_id=1";
+              $adminselect = "select * from users where user_email = '$useremail' and user_password = '$password' and rol_id=2";
+
+              $result1 = mysqli_query($con, $userselect);
+              $result2 = mysqli_query($con, $adminselect);
+              $num1 = mysqli_num_rows($result1);
+              $num2 = mysqli_num_rows($result2);
+              if ($num1 == 1 ) {
+                $_SESSION['useremail']=$useremail;
+
+               header('Location:ogrenci_exam.php');
+           } 
+           elseif($num2 == 1 ){
+                $_SESSION['adminemail']=$useremail;
+                header('Location:students.php'); //Redirect To Dashboard Page
+              }
+           else {
+        ?>      
+              <a class="alert alert-danger"> your password wrong</a>
+            <?php
+            }
+          } else {
+
+            ?>
+            <div class="alert alert-danger"> your email wrong </div>
+        <?php
+          }
+        }
+      
+        ?>
           </form>
 
  </section>

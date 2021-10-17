@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,10 +12,12 @@
    
 </head>
 <body class="bodylogin">
-    
+<?php
+include 'database.php';
+?> 
     <section class="login-section ">
         <div>
-            <form >
+            <form method="POST">
                 <h2 class="register-title title ">System registeration page </h2>
                 <div class="register-content login-content ">
                     <div class="login-email text-field">
@@ -43,6 +46,72 @@
                     <button type="submit" class="btn btn-success " name="register"> new account</button>
                     <span class="login-label mt-2 style-label mr-3">if you have an account :<a href="login.php">Click here </a></span>
     
+                    <?php
+                    
+                $name = "";
+                $password = "";
+                $useremail = "";
+                $age = "";
+                $gender = "";
+                $todayage = "";
+                if (isset($_POST["email"])) {
+
+                    $useremail = $_POST['email'];
+                }
+                if (isset($_POST["name"])) {
+
+                    $name =  $_POST['name'];
+                }
+                if (isset($_POST["password"])) {
+
+                    $password =  md5($_POST['password']);
+                }
+
+                if (isset($_POST["date"])) {
+
+                    $age =  $_POST['date'];
+                }
+              
+                if (isset($_POST["gender"])) {
+                    $gender =  $_POST['gender'];
+                }
+
+
+                $bday = $age;
+                $today = date("Y-m-d");
+                $diff = date_diff(date_create($bday), date_create($today));
+                $todayage = $diff->format('%y');
+
+
+                if (isset($_POST["register"])) {
+
+
+                    $userselect = "select * from users where user_email ='$useremail'";
+
+                    $result = mysqli_query($con, $userselect);
+                    $num = mysqli_num_rows($result);
+
+                    if ($num > 0) {
+                ?>
+                        <div class ="erorr" id="alert" >اسم المستخدم موجود</div>
+                        <?php
+                    }
+                    else {
+                        
+                            $insertuser = "insert into users ( user_name , user_email , user_password  , user_birthday , user_gender  , rol_id) values(' $name ','$useremail','$password','$age','$gender', 1)";
+                            mysqli_query($con, $insertuser);
+
+                        ?>
+                            <div class ="erorr">basarili bir sekilde eklenmis </div>
+                           
+                        
+                <?php
+                        header("location:login.php");
+                    }
+                }
+
+                ?>
+
                 </div>
             </form>
         </div>
