@@ -1,3 +1,8 @@
+<?php
+include 'database.php';
+include 'sendEmail.php';
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +12,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" 
     integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css">
-    <title>login sayfa</title>
+    <title>check email sayfasi</title>
    
 </head>
 <body class="bodylogin">
@@ -24,9 +29,63 @@
               </div>
                        
               <button type="submit" class="btn btn-success 
-                    mt-3" name="checkbutton">check</button>
+                    mt-3" id="sendEmail1"  name="sendEmail">check</button>
       
             </div>
+            <?php
+
+
+
+if (isset($_POST['sendEmail'])) {
+    $email = $_POST['email'];
+    $_SESSION['useremail']=$email;
+
+    $emailCheckQuery = "Select * from users where user_email = '$email'";
+    $emailCheckResult = mysqli_query($con, $emailCheckQuery);
+    while($res= mysqli_fetch_array($emailCheckResult)){
+        $username =$res["user_name"];
+    }
+    if ($emailCheckResult) {
+        if (mysqli_num_rows($emailCheckResult) > 0) {
+            $code = rand(999999, 111111);
+            $updateQuery = "UPDATE users SET code = $code where user_email = '$email'";
+            $updateResult = mysqli_query($con, $updateQuery);
+            if ($updateResult) {
+                $subject = 'لأعادة انشاء كلمة السر';
+                $message = "من اجل اعادة كلمة المرور استخدم هذا الكود $code";
+
+                if (send_mail1($email,$username,$subject,$message)) {
+               
+
+
+                    header('location: code.php');
+                }else{
+                    ?>
+                    <div class="alert alert-danger">kod gondirilemedi  </div>
+                    <?php 
+                }
+            } else {
+                ?>
+                   <div class="alert alert-danger">kod gondirilemedi</div>
+
+                <?php 
+               
+            }
+        } else {
+            ?>
+                 <div class="alert alert-danger"> the email is wrong </div>
+
+            <?php 
+         }
+    } else {
+        ?>
+                <div class="alert alert-danger"> email dogrulamasi basarisiz oldu </div>
+        <?php 
+       
+    }
+}
+
+?>
           </form>
 
  </section>

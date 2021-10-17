@@ -1,3 +1,11 @@
+<?php
+include 'database.php';
+session_start();
+if (isset($_SESSION['useremail'])) {
+   // echo $_SESSION['useremail'];
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,17 +28,54 @@
               <div class=" login-email text-field">
       
                 <label for="email" class="my-3 style-label">new password :</label>
-                <input type="text" class="form-control " name="newpassword" placeholder="enter new password">
+                <input type="password" class="form-control " name="password" placeholder="enter new password">
               </div>
                  
               <div class="login-password text-field">
                 <label for="password" class="my-3 style-label"> repeat new password:</label>
-                <input type="password" class="form-control" name="repeat password" placeholder="Enter repeat your password">
+                <input type="password" class="form-control" name="confirmpassword" placeholder="Enter repeat your password">
               </div>      
               <button type="submit" class="btn btn-success 
-                    mt-3" name="loginbutton">Reset </button>
+                    mt-3" name="changePassword" id="changePassword">Reset </button>
       
             </div>
+            <?php
+        if (isset($_POST['changePassword'])) {
+
+            $password =md5($_POST['password']);
+            $confirimpassword =md5($_POST['confirmpassword']);
+            $email = $_SESSION['useremail'];
+
+            $emailCheckQuery = "SELECT * FROM users WHERE user_email = '$email'";
+            $emailCheckResult = mysqli_query($con, $emailCheckQuery);
+
+            if ($emailCheckQuery) {
+                if (mysqli_num_rows($emailCheckResult) < 0) {
+                } else {
+                    if (strlen(trim($_POST['password'])) < 6) {
+        ?>
+                        <div class="alert">altidan fazla harf veya rakam kullanin</div>
+
+                        <?php
+                    } else {
+                        if ($password != $confirimpassword) {
+                        ?>
+                            <div class="alert alert-danger">iki kod eslesmiyor</div>
+
+        <?php                        } else {
+                            $confirimpassword = $password;
+
+                            $updatePassword = "UPDATE users SET user_password = '$password' where user_email = '$email '";
+                            mysqli_query($con, $updatePassword);
+                            session_unset();
+                            session_destroy();
+                            header("location: login.php");
+                        }
+                    }
+                }
+            }
+        }
+        ?>
           </form>
 
  </section>

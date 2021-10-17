@@ -1,3 +1,15 @@
+<?php
+include 'database.php';
+?>
+<?php 
+session_start();
+
+if (isset($_SESSION['useremail'])) {
+    $email= $_SESSION['useremail'];
+   // <?php echo $email; 
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,13 +32,41 @@
               <div class=" login-email text-field">
       
                 <label for="email" class="my-3 style-label">the code :</label>
-                <input type="text" class="form-control " name="email" placeholder="enter the code">
+                <input type="text" class="form-control " name="OTPverify" placeholder="enter the code" required>
               </div>
                        
               <button type="submit" class="btn btn-success 
-                    mt-3" name="checkbutton">check</button>
+                    mt-3" name="verifyEmail">check</button>
       
             </div>
+            <?php
+                     
+            if(isset($_POST['verifyEmail'])){
+                $OTPverify = mysqli_real_escape_string($con,$_POST['OTPverify']);
+                $verifQuery ="SELECT * from users where code = $OTPverify";
+                $runVerifyQuery = mysqli_query($con, $verifQuery);
+                if($runVerifyQuery){
+                   if(mysqli_num_rows($runVerifyQuery) > 0){
+                       $newQuery = "UPDATE users SET code = 0";
+                       mysqli_query($con,$newQuery);
+                       header('location: resetpassword.php');
+                   }else{
+                    ?>
+                    <div class="alert alert-danger"> code not correct</div>
+
+                <?php
+                   }
+               
+                }else{
+                    ?>
+                    <div class="alert alert-danger"> code not correct </div>
+            <?php
+                }
+            }
+
+            
+            
+            ?>
           </form>
 
  </section>
