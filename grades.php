@@ -1,3 +1,7 @@
+<?php
+error_reporting(false);
+include 'database.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,10 +43,22 @@
     </div>
    </div>
      </nav>
-  
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+$("#myInput").on("keyup", function() {
+ var value = $(this).val().toLowerCase();
+ $("#myTable tr").filter(function() {
+   $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+ });
+});
+});
+</script>
      <section>
            <div class="container">
             <h4>all grades of students </h4>
+            <input id="myInput" type="text" placeholder="Search.."   class="form-control"  style="width: 50%;">
 
             <table class="table">
                 <thead class="thead-dark">
@@ -55,21 +71,29 @@
 
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">beyan</th>
-                    <td>matimatik</td>
-                    <td>7</td>
-                    <td>3</td>
-                    <td>70</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">nur</th>
-                    <td>matimatik</td>
-                    <td>6</td>
-                    <td>4</td>
-                    <td>60</td>
-                  </tr>
+                <tbody id="myTable">
+                <?php
+            
+            $result=$con->query("SELECT * FROM result");
+        
+             while($row = $result->fetch_assoc()){
+            
+               echo "<tr>";
+               $result2=$con->query("SELECT user_name FROM users where users_id=".$row['user_id']);
+              while($row1 = $result2->fetch_assoc()){
+               echo  "<td>" .$row1['user_name'] . "</td>";
+              
+               $result3=$con->query("SELECT exam_name FROM exams where exam_id=".$row['exam_id']);
+               while($row2 = $result3->fetch_assoc()){
+               echo "<td>" . $row2['exam_name'] . "</td>";
+               
+
+               echo "<td>" . $row['right_number'] . "</td>";
+               echo "<td>" . $row['wrong_number'] . "</td>";
+               echo"<td>" . $row['final_result'] . "</td>";               
+              echo "</tr>";
+
+           }}}?>
                 </tbody>
               </table>
 
