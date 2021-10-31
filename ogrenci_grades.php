@@ -11,6 +11,16 @@
     <title>Document</title>
 </head>
 <body>
+<?php
+include 'database.php';
+session_start();
+
+if (isset($_SESSION['useremail'])) {
+  $useremail=$_SESSION['useremail'];
+
+}
+
+?>
  <!-- Header -->
  <nav class=" navbar navbar-expand-lg navbar-light bg-white">
 
@@ -34,11 +44,19 @@
 </div>
 </div>
  </nav>
+ <?php
 
+$query=mysqli_query($con,"SELECT * FROM users where user_email='$useremail'");
+  while($rows = mysqli_fetch_array($query)){
+    $userid=$rows['users_id'];
+    $email1=$rows['user_email'];
+ }
+
+?>
  <section>
            <div class="container">
             <h4>all my results</h4>
-
+            <form method="POST">
             <table class="table">
                 <thead class="thead-dark">
                   <tr>
@@ -49,22 +67,34 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th scope="row">matematik</th>
-                    <td>7</td>
-                    <td>3</td>
-                    <td>70</td>
+                <?php
 
-                  </tr>
-                  <tr>
-                  <th scope="row">algoritma ve programlama</th>
-                    <td>8</td>
-                    <td>2</td>
-                    <td>80</td>
-                  </tr>
+            $selectquery = "select * from result  where user_id =".$userid;
+            //echo $userid;
+            $query = mysqli_query($con,$selectquery);
+            while($res = mysqli_fetch_array($query)){
+                
+              $selectdepartmentname = "select * from exams where exam_id =".$res['exam_id'];;
+              $query2 = mysqli_query($con,$selectdepartmentname);
+              while($res1 = mysqli_fetch_array($query2)){
+
+
+
+            ?>
+      <tr>   
+                <td name =""><?php echo $res1['exam_name'];?></td>
+                <td name =""><?php echo $res['right_number']; ?></td>
+                <td name =""><?php echo $res['wrong_number']; ?></td>
+                <td name =""><?php echo $res['final_result']; ?></td>
+               
+              </tr>
+              <?php
+              
+            }}
+              ?>
                 </tbody>
               </table>
-
+           </form>
            </div>
      </section>
 
