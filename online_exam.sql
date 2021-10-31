@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 03, 2021 at 11:23 AM
+-- Generation Time: Oct 31, 2021 at 10:30 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -39,7 +39,7 @@ CREATE TABLE `exams` (
 INSERT INTO `exams` (`exam_id`, `exam_name`) VALUES
 (1, 'matematik'),
 (2, 'programlama'),
-(3, 'fizik');
+(3, 'ingilizca');
 
 -- --------------------------------------------------------
 
@@ -58,6 +58,27 @@ CREATE TABLE `questions` (
   `exam_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `questions`
+--
+
+INSERT INTO `questions` (`question_id`, `question`, `answer_A`, `answer_B`, `answer_C`, `true_answer`, `question_score`, `exam_id`) VALUES
+(1, '50 * 10=? bu sorunun dogru cevabi hangisidir?', '200', '300', '500', 'C', 20, 1),
+(8, '(x+ 5) * 3 = 18   x= ? ', '1', '2', '3', 'A', 20, 1),
+(9, '3x + 10 = 100   x=?     x bu denkleme gore degeri kac olur?', '20', '30', '40', 'B', 20, 1),
+(10, '(x - 8) * 4 = 80   x= ? ', '24', '28', '19', 'B', 20, 1),
+(11, '3y * 6x = 54    buna gore  x + 2y =? ', '15', '17', '18', 'C', 0, 1),
+(12, ' one , two ,three, ..........,five , six', 'for', 'four', 'fore', 'B', 20, 3),
+(13, 'A ............ is a small portable computer', 'desk', 'folder', 'laptop', 'C', 20, 3),
+(14, '............ name is beyan .', 'me', 'my', 'mine', 'B', 20, 3),
+(15, 'these are my friends . ................. italian', 'there are ', 'the ', 'their', 'A', 20, 3),
+(16, '.............. you a student .', 'am', 'is', 'are', 'C', 20, 3),
+(17, 'programlamada  >= sembolu ne anlama geliyor ?', 'daha buyuk ve esit', 'daha kucuk ve esit', 'esit', 'A', 20, 2),
+(18, 'x=2 x=4 y=5      z=x+y   print(z) z degeri ekrana kac cikar ?', '7', '9', '5', 'B', 20, 2),
+(19, 'printf(\"merhaba dunya\");      bu kodun hangi dil ile yazildi?', 'C', 'java', 'c#', 'A', 20, 2),
+(20, 'st = \"hello world \";    x =  5 ;  System.out.println(st + x);  ekrana ne cikacak ?', 'hello', 'error verir', 'hello world5', 'C', 20, 2),
+(21, 'x= 10 ;    y= 6;  y =x+y;      printf(x+y); yazilan kodun sonucu nedir ?', '26', '18', '30', 'A', 20, 2);
+
 -- --------------------------------------------------------
 
 --
@@ -71,6 +92,18 @@ CREATE TABLE `result` (
   `wrong_number` int(11) NOT NULL,
   `final_result` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `result`
+--
+
+INSERT INTO `result` (`user_id`, `exam_id`, `right_number`, `wrong_number`, `final_result`) VALUES
+(1, 1, 8, 2, 80),
+(9, 2, 2, 3, 40),
+(9, 3, 0, 5, 0),
+(10, 1, 3, 2, 60),
+(10, 2, 2, 3, 40),
+(10, 3, 2, 3, 40);
 
 -- --------------------------------------------------------
 
@@ -113,8 +146,13 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`users_id`, `user_name`, `user_email`, `user_password`, `user_birthday`, `user_gender`, `rol_id`, `code`) VALUES
-(1, 'beyan', 'bayanrhayyem@gmail.com', 'beyan12345', '1998-10-05', 'kiz', 2, 0),
-(2, 'bayoon', 'beyan112@gmail.com', 'bbbb122', '2000-10-12', 'kiz', 1, 0);
+(1, 'beyan', 'bayanrhayyem@gmail.com', 'beyan12345', '1998-10-05', 'kiz', 2, 963631),
+(4, ' nura ', 'nura@gmail.com', '627854e83bbf529f36788ed93b684f90', '2013-07-18', 'female', 1, 0),
+(5, ' hasan ', 'hasan@gmail.com', 'b16dc6f31cf996efb7c6e498ffcaeac6', '2015-06-04', 'male', 1, 0),
+(6, ' bayano ', 'bayyoon345789a@gmail.com', 'f5bb0c8de146c67b44babbf4e6584cc0', '2016-03-17', 'female', 1, 988105),
+(7, ' nuha ', 'nuha@gmail.com', 'yuuyryr', '2012-02-28', 'femail', 2, 0),
+(9, ' fatma ', 'fatma@gmail.com', 'ab515fc8490c32d3077a01f329f2cf4a', '2015-06-04', 'female', 1, 0),
+(10, ' lama ', 'lama@gmail.com', 'b9be9dc7e9d8cee582662b3d9b415d2e', '2021-10-12', 'female', 1, 0);
 
 --
 -- Indexes for dumped tables
@@ -138,7 +176,7 @@ ALTER TABLE `questions`
 --
 ALTER TABLE `result`
   ADD KEY `user_id` (`user_id`),
-  ADD KEY `exam_id` (`exam_id`);
+  ADD KEY `exam_id` (`exam_id`) USING BTREE;
 
 --
 -- Indexes for table `roles`
@@ -167,13 +205,13 @@ ALTER TABLE `exams`
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `users_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `users_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
