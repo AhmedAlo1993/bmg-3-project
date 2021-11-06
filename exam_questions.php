@@ -9,14 +9,15 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
   <title>sinav</title>
   <?php
-  
+  error_reporting(false);
+
   session_start();
   if (isset($_SESSION['useremail'])) {
     $useremail = $_SESSION['useremail'];
     //  echo $useremail;
   }
   $exam_id = isset($_GET['exam_id']) && is_numeric($_GET['exam_id']) ? intval($_GET['exam_id']) : 0;
-  
+
   ?>
   <style>
    
@@ -31,8 +32,6 @@
       display: inline-block;
       
     }
-
-   
     .link2 {
       display: inline-block;
       width: 40%;
@@ -46,7 +45,6 @@
     .hover-title:hover {
       color: darkmagenta;
     }
-
     .content-question {
       margin: 10px 7%;
     }
@@ -97,14 +95,21 @@
       <?php
       //header("location: ogrenci_exam.php");
     }else{
+      
   ?>
+  
     <h5 class="alert alert-success text-center" style="margin-top: 10px;">grades bolumune girerek puanlarinizi gorebilirsiniz : <a href="ogrenci_grades.php" >grades bolumu</a></h5>
 
 
   <?php
-  }} ?>
-  <?php
 
+  }} 
+  if(isset($_POST['gonder'])){
+  ?>
+  
+
+  <?php
+  }
   error_reporting(false);
   $exam = @mysqli_query($con, "SELECT question, question_id FROM questions WHERE exam_id=$exam_id");
   if (@mysqli_num_rows($exam) == 0)
@@ -125,8 +130,6 @@
       <form method="POST">
         <div class="question container">
           <h3 class="question_title  mb-3"><?php echo $i . ". " . $ques; ?></h3>
-
-
 
           <?php
            
@@ -201,19 +204,48 @@ if (isset($_POST['gonder'])) {
     }else{
     $insertqu = "insert into result ( user_id , exam_id ,right_number,wrong_number ,final_result) values('$useid','$exam_id','$dogru','$yanlis','$final')";
     mysqli_query($con, $insertqu);
+    $selectresult = "SELECT final_result FROM result WHERE exam_id ='$exam_id'";
+     $ortalama =0;
+      $ort = mysqli_query($con, $selectresult);
+      $nums= mysqli_num_rows($ort);
+      while ($orts = @mysqli_fetch_array($ort)){
+        $ortalama += $orts['final_result'] ;
+
+      }
+      $ortalama=$ortalama/$nums;
+      
+?>
+  <h5 class="alert alert-info text-center" id="ort" style="margin-top: 10px;">sinif ortalamsi : <?php echo $ortalama ;?></h5>
+
+<?php
+      // $ort = "insert into ortalama ( ortalama ,exam_id) values ('$ortalama','$exam_id')";
+      // mysqli_query($con, $ort);
     }
   }}
-
+ 
   ?> 
+
+
+  <?php
+  
+  ?>
+  <script>
+    var ort =document.getElementById('ort');
+    ort.innerHTML("sinif ortalamasi : " + <?php echo $ortalama;?>);
+   
+  </script>
   <div class="container">
   <button type="submit" class="btn btn-success button-gonder1" name='gonder' id="buttongonder">send answers</button>
   
 
   </div>
       </form>
+<?php
 
 
+     
 
+?>
 
 
       <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

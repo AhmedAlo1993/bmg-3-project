@@ -12,9 +12,9 @@
 </head>
 <body>
 <?php
-include 'database.php';
-session_start();
 
+session_start();
+include 'database.php';
 if (isset($_SESSION['useremail'])) {
   $useremail=$_SESSION['useremail'];
 
@@ -38,6 +38,9 @@ if (isset($_SESSION['useremail'])) {
        </li>
        <li class="nav-item mar">
          <a class="nav-link active  link" href="ogrenci_grades.php">My grades </a>
+       </li>
+       <li class="nav-item mar">
+         <a class="nav-link link" href="exit.php">Exit </a>
        </li>
 
      </ul>
@@ -74,8 +77,8 @@ $query=mysqli_query($con,"SELECT * FROM users where user_email='$useremail'");
             $query = mysqli_query($con,$selectquery);
             while($res = mysqli_fetch_array($query)){
                 
-              $selectdepartmentname = "select * from exams where exam_id =".$res['exam_id'];;
-              $query2 = mysqli_query($con,$selectdepartmentname);
+              $selectname = "select * from exams where exam_id =".$res['exam_id'];;
+              $query2 = mysqli_query($con,$selectname);
               while($res1 = mysqli_fetch_array($query2)){
 
 
@@ -97,8 +100,25 @@ $query=mysqli_query($con,"SELECT * FROM users where user_email='$useremail'");
            </form>
            </div>
      </section>
+     <!-- <div class="container">
+       <h3 style="color: green;"> Sinif ortalamalari  :</h3> -->
+<?php
+// $deletequery = "delete from ortalama limit 3";
+// mysqli_query($con,$deletequery);
 
-
+  // $ortquery = "select exam_id,ortalama from ortalama ";
+  // $query = mysqli_query($con,$ortquery);
+  // while($res = mysqli_fetch_array($query)){
+  //   $select = "select * from exams where exam_id =".$res['exam_id'];
+  //   $query2 = mysqli_query($con,$select);
+  //   while($res1 = mysqli_fetch_array($query2)){
+  //       echo $res1['exam_name'] ."  :  ";
+  //       echo $res['ortalama'];
+  //       echo "<br>";
+  // }
+  // }
+?>
+</div>
 
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" 

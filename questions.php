@@ -39,7 +39,9 @@ error_reporting(false);
          <li class="nav-item mar">
                <a class="nav-link link" href="admins.php">admins</a>
         </li>
-
+        <li class="nav-item mar">
+         <a class="nav-link link" href="exit.php">Exit </a>
+       </li>
          </ul>
          
       

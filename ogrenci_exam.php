@@ -28,7 +28,7 @@
    var buton=0;
 </script>
 <?php
-  
+  error_reporting(false);
   session_start();
   if (isset($_SESSION['useremail'])) {
     $useremail = $_SESSION['useremail'];
@@ -59,7 +59,9 @@ include 'database.php';
        <li class="nav-item mar">
          <a class="nav-link link" href="ogrenci_grades.php">My grades </a>
        </li>
-      
+       <li class="nav-item mar">
+         <a class="nav-link link" href="exit.php">Exit </a>
+       </li>
 
      </ul>
 </div>
